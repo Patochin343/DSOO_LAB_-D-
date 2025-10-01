@@ -2,6 +2,11 @@ public class Prestamo{
 	private Usuario usuario;
 	private Libro libro;
 	private String fechaPrestamo;
+
+	public Prestamo(Usuario usuario, Libro libro){
+		this.libro = libro;
+		this.usuario = usuario;
+	}
 	public Usuario getUsuario(){
 		return this.usuario;
 	}
