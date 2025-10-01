@@ -58,4 +58,24 @@ public class Biblioteca{
 		this.libros.add(libro);
 	}
 
+
+	public void setNombre(String nombre){
+		this.nombre = nombre;
+	}
+	public String getNombre({
+		return this.nombre;
+	}
+	public void setLibros(ArrayList<Libro> libros){
+		this.libros = libros;
+	}
+	public ArrayList<Libro> getLibros(){
+		return this.libros;
+	}
+	public void setPrestamos(ArrayList<Prestamo> prestamos){
+		this.prestamos = prestamos;
+	}
+
+	public ArrayList<Prestamo> getPrestamos(){
+		return this.prestamos;
+	}
 }
