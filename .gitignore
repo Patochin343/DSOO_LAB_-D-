@@ -1,0 +1,59 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
+*.ipr
+*.iws
+
+# Archivos de configuración de usuario
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/usage.statistics.xml
+.idea/**/assetWizardSettings.xml
+
+# Archivos de compilación
+*.class
+*.log
+
+### Node.js ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+### Python ###
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.python-version
+.venv/
+env/
+venv/
+ENV/
+Pipfile.lock
+poetry.lock
+
+### General ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+
+### VSCode (por si mezclas) ###
+.vscode/
+.history/
+
+### Coverage / Testing ###
+coverage/
+.nyc_output/
+.pytest_cache/
+.cache/
