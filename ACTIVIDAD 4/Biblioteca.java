@@ -2,7 +2,7 @@ import java.util.*;
 public class Biblioteca{
 	private ArrayList<Libro> libros;
 	private ArrayList<Prestamo> prestamos;
-	private Biblioteca instancia;
+	private static Biblioteca instancia;
 	private nombre;
 
 	private Biblioteca(String nombre){
