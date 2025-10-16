@@ -1,4 +1,7 @@
+import java.util.*;
 public class Paciente {
+    private static ArrayList<Integer> codigosDocumento = new ArrayList<>();
+    private static ArrayList<Integer> codigosId = new ArrayList<>();
 
     /* Atributos del paciente */
     private String nombre;
@@ -7,11 +10,19 @@ public class Paciente {
     private int codigoDocumento;
 
     /* Constructor */
-    public Paciente(String nombre, int codigoPaciente, int edad, int codigoDocumento) {
+    private Paciente(String nombre, int codigoPaciente, int edad, int codigoDocumento) {
         this.nombre = nombre;
         this.codigoPaciente = codigoPaciente;
         this.edad = edad;
         this.codigoDocumento = codigoDocumento;
+    }
+
+    /* Constructor con verificacion*/
+    public Paciente crearPaciente(String nombre, int codigoPaciente, int edad, int codigoDocumento){
+        if(Paciente.codigosId.contains(codigoPaciente) || Paciente.codigosDocumento.contains(codigoDocumento))
+            return null;
+        else
+            return new Paciente(nombre, codigoPaciente, edad, codigoDocumento);
     }
 
     /* Métodos getters y setters */
@@ -25,7 +36,10 @@ public class Paciente {
         return codigoPaciente;
     }
     public void setCodigoPaciente(int codigoPaciente) {
-        this.codigoPaciente = codigoPaciente;
+        if(!Paciente.codigosId.contains(codigoPaciente)){
+            Paciente.codigosId.remove(this.codigoPaciente);
+            Paciente.codigosId.add(codigoPaciente);
+        }
     }
     public int getEdad() {
         return edad;
@@ -37,6 +51,9 @@ public class Paciente {
         return codigoDocumento;
     }
     public void setCodigoDocumento(int codigoDocumento) {
-        this.codigoDocumento = codigoDocumento;
+        if(!Paciente.codigosDocumento.contains(codigoDocumento)){
+            Paciente.codigosDocumento.remove(this.codigoDocumento);
+            Paciente.codigosDocumento.add(codigoDocumento);
+        }
     }
 }

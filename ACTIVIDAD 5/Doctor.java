@@ -1,5 +1,9 @@
+import java.util.*;
 public class Doctor 
 {
+    private static ArrayList<Integer> codigos = new ArrayList<>();
+
+
     /* Atributos del doctor */
     private int codigo;
     private String nombre; 
@@ -7,12 +11,20 @@ public class Doctor
     private String horarioDeAtencion; 
 
     /* Método Constructor */
-    public Doctor (int codigo, String nombre, String especialidad, String horarioDeAtencion)
+    private Doctor (int codigo, String nombre, String especialidad, String horarioDeAtencion)
     {
         this.codigo=codigo;
         this.nombre=nombre;
         this.especialidad=especialidad; 
         this.horarioDeAtencion=horarioDeAtencion;
+    }
+
+    /* Constructor con verificacion*/
+    public Doctor crearDoctor(int codigo, String nombre, String especialidad, String horarioDeAtencion){
+        if(Doctor.codigos.contains(codigo))
+            return null;
+        else
+            return new Doctor(codigo, nombre, especialidad, horarioDeAtencion);
     }
 
     /* Métodos Getters */
@@ -36,7 +48,10 @@ public class Doctor
     /* Métodos Setters */
     public void setCodigo (int codigo)
     {
-        this.codigo=codigo;
+        if(!Doctor.codigos.contains(codigo)){
+            Doctor.codigos.remove(this.codigo);
+            Doctor.codigos.add(codigo);
+        }
     }
     public void setNombre (String nombre)
     {
