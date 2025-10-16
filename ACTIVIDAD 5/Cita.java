@@ -2,17 +2,15 @@ public class Cita {
     private int codigoCita;
     private Paciente paciente;
     private Doctor doctor;
-    private String fecha;
+    private FechayHora fechayHora;
     private String estado;
-    private String hora;
 
-    public Cita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado, String hora) {
+    public Cita(int codigoCita, Paciente paciente, Doctor doctor, String estado, FechayHora fechayHora) {
         this.codigoCita = codigoCita;
         this.paciente = paciente;
         this.doctor = doctor;
-        this.fecha = fecha;
         this.estado = estado;
-        this.hora = hora;
+        this.fechayHora = fechayHora;
     }
 
     public int getCodigoCita() {
@@ -39,12 +37,12 @@ public class Cita {
         this.doctor = doctor;
     }
 
-    public String getFecha() {
-        return fecha;
+    public FechayHora getFechayHora() {
+        return fechayHora;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setFechayHora(FechayHora fecha) {
+        this.fechayHora = fecha;
     }
 
     public String getEstado() {
@@ -55,20 +53,11 @@ public class Cita {
         this.estado = estado;
     }
 
-    public String getHora(){
-        return this.hora;
-    }
-
-    public void setHora(String hora){
-        this.hora = hora;
-    }
-
     public void mostrarInfo() {
         System.out.println("Código de cita: " + codigoCita);
         System.out.println("Paciente: " + paciente.getNombre());
         System.out.println("Doctor: " + doctor.getNombre());
-        System.out.println("Fecha: " + fecha);
-        System.out.println("Hora: " + hora);
+        System.out.println("Fecha y hora: " + fechayHora.toString());
         System.out.println("Estado: " + estado);
     }
 }

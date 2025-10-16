@@ -4,15 +4,15 @@ public class Doctor
     private int codigo;
     private String nombre; 
     private String especialidad; 
-    private String horarioDeAtencion; 
+    private FechayHora[] horarioDeAtencion; 
 
     /* Método Constructor */
-    public Doctor (int codigo, String nombre, String especialidad, String horarioDeAtencion)
+    public Doctor (int codigo, String nombre, String especialidad, FechayHora horaInicial, FechayHora horaFinal)
     {
         this.codigo=codigo;
         this.nombre=nombre;
         this.especialidad=especialidad; 
-        this.horarioDeAtencion=horarioDeAtencion;
+        this.horarioDeAtencion= new FechayHora[] {horaInicial, horaFinal};
     }
 
     /* Métodos Getters */
@@ -28,7 +28,7 @@ public class Doctor
     {
         return especialidad; 
     }
-    public String getHorarioDeAtencion ()
+    public FechayHora[] getHorarioDeAtencion ()
     {
         return horarioDeAtencion; 
     }
@@ -46,7 +46,7 @@ public class Doctor
     {
         this.especialidad=especialidad;
     }
-    public void setHorarioDeAtencion (String horarioDeAtencion)
+    public void setHorarioDeAtencion (FechayHora[] horarioDeAtencion)
     {
         this.horarioDeAtencion=horarioDeAtencion;
     }

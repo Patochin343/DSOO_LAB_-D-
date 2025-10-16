@@ -68,22 +68,30 @@ public class SistemaDeCitas {
   private boolean validarEdadPaciente(Paciente paciente){
     return paciente.getEdad()>0;
   }
-  public void registrarCita(Cita cita){
-    if(validarCita(cita.getHora(),cita.getFecha())&&buscarCitaPorCodigo(cita.getCodigoCita())==null){
-      citas.add(cita);
-    }else if(buscarCitaPorCodigo(cita.getCodigoCita())!=null){
-      System.out.println("Ya existe una cita con ese código");
-    }else{
-      System.out.println("Ese horario está ocupado");
-    }
-  }
-  private boolean validarCita(String hora, String fecha){
-    for(Cita cita:citas){
-      if(hora.equals(cita.getHora())&&fecha.equals(cita.getFecha())){
-        return false;
+  public void registrarCita(int codigoDoctor, int codigoPaciente, String fecha, String hora){
+    Doctor doctor = buscarDoctorPorCodigo(codigoDoctor);
+    Paciente paciente = buscarPacientePorCodigo(codigoPaciente);
+    if(doctor != null && paciente != null){
+      FechayHora objFecha = new FechayHora(fecha, hora);
+      boolean validar = validarCita(objFecha, doctor);
+      if(validar){
+        Cita cita = new Cita(codigoPaciente, paciente, doctor, hora, objFecha);
       }
     }
-    return true; 
+  }
+  private boolean validarCita(FechayHora fechayhora, Doctor doc){
+    FechayHora[] horario = doc.getHorarioDeAtencion();
+    boolean estaEnHorarioAtencion = FechayHora.horaEstaEntre(fechayhora, horario[0], horario[1]);
+    if(!estaEnHorarioAtencion)
+      return false;
+    
+    for(Cita cita : this.citas){
+      if(cita.getDoctor().getCodigo() == doc.getCodigo()){
+        if(FechayHora.sonIguales(fechayhora, cita.getFechayHora()))
+          return false;
+      }
+    }
+    return true;
   }
   private Cita buscarCitaPorCodigo(int codigo){
     for(Cita cita:citas){
