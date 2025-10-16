@@ -4,7 +4,6 @@ public class Principal {
     public static void main(String[] args) {
         
         Biblioteca.crearBiblioteca("Biblioteca Central");
-        Biblioteca biblioteca = Biblioteca.getBiblioteca();
 
         Iniciar();
     }
@@ -18,7 +17,7 @@ public class Principal {
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             OpcionUsuario(opcion);
-        } while (opcion != 6);
+        } while (opcion != 7);
 
         scanner.close();
     }
@@ -28,8 +27,9 @@ public class Principal {
         System.out.println("2. Mostrar libros");
         System.out.println("3. Prestar libro");
         System.out.println("4. Devolver libro");
-        System.out.println("5. Mostrar libros prestados");
-        System.out.println("6. Salir");
+        System.out.println("5. Mostrar libros de un usuario");
+        System.out.println("6. Mostrar usuarios registrados");
+        System.out.println("7. Salir");
     }
 
     public static void OpcionUsuario(int opcion){
@@ -54,7 +54,9 @@ public class Principal {
             case 3:
                 System.out.print("Ingrese el nombre del usuario: ");
                 String nombreUsuario = scanner.nextLine();
-                Usuario usuario = new Usuario(nombreUsuario);
+                System.out.print("Ingrese el id del usuario: ");
+                String idusuario = scanner.nextLine();
+                Usuario usuario = new Usuario(nombreUsuario, Integer.parseInt(idusuario));
                 System.out.print("Ingrese el ISBN del libro a prestar: ");
                 String isbnPrestamo = scanner.nextLine();
                 System.out.print("Ingrese la fecha de préstamo (dd/mm/yyyy): ");
@@ -63,21 +65,22 @@ public class Principal {
                 System.out.println(resultadoPrestamo);
                 break;
             case 4:
-                System.out.print("Ingrese el nombre del usuario: ");
-                String nombreDevolucion = scanner.nextLine();
-                Usuario usuarioDevolucion = new Usuario(nombreDevolucion);
+                System.out.print("Ingrese el id del Usuario: ");
+                String idUsuario = scanner.nextLine();
                 System.out.print("Ingrese el ISBN del libro a devolver: ");
                 String isbnDevolucion = scanner.nextLine();
-                String resultadoDevolucion = biblioteca.devolverDe(usuarioDevolucion, isbnDevolucion);
+                String resultadoDevolucion = biblioteca.devolverDe(Integer.parseInt(idUsuario), isbnDevolucion);
                 System.out.println(resultadoDevolucion);
                 break;
             case 5:
-                System.out.print("Ingrese el nombre del usuario: ");
-                String nombreMostrar = scanner.nextLine();
-                Usuario usuarioMostrar = new Usuario(nombreMostrar);
-                usuarioMostrar.mostrarLibrosPrestados();
+                System.out.print("Ingrese el id del usuario: ");
+                int idUser = scanner.nextInt();
+                biblioteca.mostrarLibrosPrestadosDe(idUser);
                 break;
             case 6:
+                biblioteca.mostrarUsuariosRegistrados();
+                break;
+            case 7:
                 System.out.println("Saliendo del sistema...");
                 break;
             default:
