@@ -4,17 +4,19 @@ public class Biblioteca{
 
 	/* Atributos de la biblioteca */
 	private ArrayList<Libro> libros;
+	private ArrayList<Usuario> usuariosRegistrados;
 	private ArrayList<Prestamo> prestamos;
+
 	private static Biblioteca instancia;
 	private String nombre;
 
 	/* Constructor */
-	public Biblioteca(String nombre){
+	private Biblioteca(String nombre){
 		this.nombre = nombre;
 		this.libros = new ArrayList<>();
 		this.prestamos = new ArrayList<>();
+		this.usuariosRegistrados = new ArrayList<>();
 	}
-
 
 	/* Método para crear la biblioteca */
 	public static void crearBiblioteca(String nombre){
@@ -24,7 +26,6 @@ public class Biblioteca{
 		}
 	}
 
-
 	/* Método para obtener la instancia de la biblioteca */
 	public static Biblioteca getBiblioteca(){
 		return Biblioteca.instancia;
@@ -32,13 +33,21 @@ public class Biblioteca{
 
 	/* Método para mostrar los libros disponibles */
 	public void mostrarLibros(){
-		System.out.println("titulo\tautor\tISBN");
+		System.out.println("titulo\tautor\tISBN\tDisponible");
 		for(Libro libro: this.libros)
 		{
-			System.out.println((libro.getTitulo()) +"\t"+(libro.getAutor())+"\t"+(libro.getISBN()));
+			System.out.println((libro.getTitulo()) +"\t"+(libro.getAutor())+"\t"+(libro.getISBN()) + "\t" + (libro.isDisponible()));
 		}
 	}
 
+	/*Metodo para mostrar usuarios que prestaron un libro */
+	public void mostrarUsuariosRegistrados(){
+		System.out.println("Nombre\tId");
+		for(Usuario usuario: this.usuariosRegistrados)
+		{
+			System.out.println((usuario.getNombre()) +"\t"+(usuario.getId()));
+		}
+	}
 
 	/* Método para buscar un libro por su ISBN */
 	private Libro buscarPorISBN(String ISBN){
@@ -52,11 +61,33 @@ public class Biblioteca{
 		return null;
 	}
 
+	/* Método para buscar un usuario por su id */
+	private Usuario buscarUsuarioPorId(int Id){
+		for(Usuario usuario: this.usuariosRegistrados){
+			if(usuario.getId() == Id)
+				return usuario;
+		}
+		return null;
+	}
 
-	/* Método para prestar un libro a un usuario */
+
+	/* Método para prestar un libro a un usuario nuevo */
 	public String prestarA(Usuario usuario, String ISBN, String fecha){
-		Object[] disponible = this.verificarDisponibilidad(ISBN);
+		Usuario usr = buscarUsuarioPorId(usuario.getId());
+		if (usr == null) {
+			registrarUsuario(usuario);
+			return prestarA(usuario.getId(), ISBN, fecha);
+		}
+		else{
+			return prestarA(usuario.getId(), ISBN, fecha);
+		}
+	}
+
+	/* Método para prestar un libro a un usuario existente (sobrecargado) */
+	public String prestarA(int IdUsuario, String ISBN, String fecha){
+		Object[] disponible = verificarDisponibilidad(ISBN);
 		if(disponible[0].equals("Disponible!")){
+			Usuario usuario = buscarUsuarioPorId(IdUsuario);
 			Libro libro = (Libro)disponible[1];
 			Prestamo prestamo = new Prestamo();
 			prestamo.setUsuario(usuario);
@@ -71,21 +102,51 @@ public class Biblioteca{
 
 
 	/*Metodo para devolver un libro */
-	public String devolverDe(Usuario usuario, String ISBN){
-		Prestamo prestamo = null;
-		for(Prestamo p: this.prestamos){
-			if(p.getUsuario().getNombre().equals(usuario.getNombre()) && p.getLibro().getISBN().equals(ISBN)){
-				prestamo = p;
-				break;
+	public String devolverDe(int idUsuario, String ISBN){
+		Usuario usr = buscarUsuarioPorId(idUsuario);
+		Libro libro = buscarPorISBN(ISBN);
+
+		if(usr == null || libro == null){
+			return "el usuario o el libro no existen";
+		}
+		else{
+			for(Prestamo p: this.prestamos){
+				boolean verificarIdUsuario = p.getUsuario().getId() == usr.getId();
+				boolean verificarISBN = p.getLibro().getISBN() == libro.getISBN();
+				if(verificarIdUsuario && verificarISBN){
+					this.prestamos.remove(p);
+					libro.setDisponible(true);
+					eliminarUsuarioPorNumeroDePrestamos(idUsuario);
+					return "Devolucion exitosa";
+				}
+				else{
+					return "El usuario y el libro indicados no estan relacionados en un prestamo";
+				}
+			}
+			return"sin prestamos";
+		}
+	}
+
+	/*Metodo para mostrar libros prestados de un usuario */
+	public void mostrarLibrosPrestadosDe(int idUsuario){
+		System.out.println("titulo\tautor\tISBN");
+		for(Prestamo p:this.prestamos){
+			if(p.getUsuario().getId() == idUsuario){
+				System.out.println((p.getLibro().getTitulo()) +"\t"+(p.getLibro().getAutor())+"\t"+(p.getLibro().getISBN()) + "\t" + (p.getLibro().isDisponible()));
 			}
 		}
-		if(prestamo != null){
-			this.prestamos.remove(prestamo);
-			Libro libro = prestamo.getLibro();
-			libro.setDisponible(true);
-			return "Devolución exitosa.";
+	}
+
+	/*Metodo para eliminar a un usuario si su numero de prestamos es 0 */
+	private void eliminarUsuarioPorNumeroDePrestamos(int idUsuario){
+		int prestamosNum = 0;
+		for(Prestamo p: this.prestamos){
+			if(p.getUsuario().getId()==idUsuario)
+				prestamosNum++;
 		}
-		return "No se encontró el préstamo.";
+		if(prestamosNum == 0){
+			this.usuariosRegistrados.remove(buscarUsuarioPorId(idUsuario));
+		}
 	}
 
 	/* Método para verificar la disponibilidad de un libro */
@@ -104,7 +165,10 @@ public class Biblioteca{
 	public void addLibro(Libro libro){
 		this.libros.add(libro);
 	}
-
+	/* Metodo para agregar un usuario registrado */
+	public void registrarUsuario(Usuario usuario){
+		this.usuariosRegistrados.add(usuario);
+	}
 
 	/* Métodos de acceso */
 	public String getNombre(){
@@ -115,6 +179,9 @@ public class Biblioteca{
 	}
 	public ArrayList<Prestamo> getPrestamos(){
 		return this.prestamos;
+	}
+	public ArrayList<Usuario> getUsuarios(){
+		return this.usuariosRegistrados;
 	}
 
 
@@ -127,5 +194,8 @@ public class Biblioteca{
 	}
 	public void setPrestamos(ArrayList<Prestamo> prestamos){
 		this.prestamos = prestamos;
+	}
+	public void setUsuarios(ArrayList<Usuario> usuarios){
+		this.usuariosRegistrados = usuarios;
 	}
 }
