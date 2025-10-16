@@ -177,3 +177,4 @@ public class FechayHora {
     public String toString() {
         return String.format("%02d/%02d/%04d %02d:%02d", dia, mes, año, hora, minuto);
     }
+}
