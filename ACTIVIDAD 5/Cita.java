@@ -68,6 +68,7 @@ public class Cita {
         System.out.println("Paciente: " + paciente.getNombre());
         System.out.println("Doctor: " + doctor.getNombre());
         System.out.println("Fecha: " + fecha);
+        System.out.println("Hora: " + hora);
         System.out.println("Estado: " + estado);
     }
 }
