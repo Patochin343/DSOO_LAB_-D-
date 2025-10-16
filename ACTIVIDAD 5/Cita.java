@@ -1,26 +1,16 @@
-import java.util.*;
 public class Cita {
-    private static ArrayList<Integer> codigos = new ArrayList<>();
-
     private int codigoCita;
     private Paciente paciente;
     private Doctor doctor;
     private String fecha;
     private String estado;
 
-    private Cita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado) {
+    public Cita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado) {
         this.codigoCita = codigoCita;
         this.paciente = paciente;
         this.doctor = doctor;
         this.fecha = fecha;
         this.estado = estado;
-        Cita.codigos.add(codigoCita);
-    }
-    public Cita crearCita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado){
-        if(Cita.codigos.contains(codigoCita))
-            return null;
-        else
-            return new Cita(codigoCita, paciente, doctor, fecha, estado);
     }
 
     public int getCodigoCita() {
@@ -28,10 +18,7 @@ public class Cita {
     }
 
     public void setCodigoCita(int codigoCita) {
-        if(!Cita.codigos.contains(codigoCita)){
-            Cita.codigos.remove(this.codigoCita);
-            Cita.codigos.add(codigoCita);
-        }
+        this.codigoCita = codigoCita;
     }
 
     public Paciente getPaciente() {
@@ -73,5 +60,3 @@ public class Cita {
         System.out.println("Estado: " + estado);
     }
 }
-
-
