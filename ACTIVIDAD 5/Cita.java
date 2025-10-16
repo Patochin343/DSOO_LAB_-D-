@@ -4,13 +4,15 @@ public class Cita {
     private Doctor doctor;
     private String fecha;
     private String estado;
+    private String hora;
 
-    public Cita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado) {
+    public Cita(int codigoCita, Paciente paciente, Doctor doctor, String fecha, String estado, String hora) {
         this.codigoCita = codigoCita;
         this.paciente = paciente;
         this.doctor = doctor;
         this.fecha = fecha;
         this.estado = estado;
+        this.hora = hora;
     }
 
     public int getCodigoCita() {
@@ -52,6 +54,15 @@ public class Cita {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public String getHora(){
+        return this.hora;
+    }
+
+    public void setHora(String hora){
+        this.hora = hora;
+    }
+
     public void mostrarInfo() {
         System.out.println("Código de cita: " + codigoCita);
         System.out.println("Paciente: " + paciente.getNombre());
