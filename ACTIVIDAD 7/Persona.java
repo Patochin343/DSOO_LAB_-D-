@@ -1,13 +1,11 @@
 public class Persona {
 
-    // Atributos 
     private String dni;
     private String nombre;
     private String apellido;
     private String direccion;
     private String telefono;
 
-    // Constructor para inicializar los datos
     public Persona(String dni, String nombre, String apellido, String direccion, String telefono) {
         this.dni = dni;
         this.nombre = nombre;
@@ -24,12 +22,33 @@ public class Persona {
         System.out.println("Teléfono: " + this.telefono);
     }
 
-    // Getters y Setters 
+    // --- GETTERS Y SETTERS MEJORADOS ---
+    
+    public String getDni() {
+        return dni;
+    }
+
     public String getNombre() {
         return nombre;
     }
 
     public String getApellido() {
         return apellido;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }

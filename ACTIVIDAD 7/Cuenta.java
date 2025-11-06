@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 public class Cuenta {
     private String numeroCuenta;
     private String tipoCuenta; 
     private double saldo;
     private Date fechaApertura;
     private List<Transaccion> transacciones;
+
     public Cuenta(String numeroCuenta, String tipoCuenta, double saldoInicial, Date fechaApertura) {
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
@@ -15,34 +17,52 @@ public class Cuenta {
         this.transacciones = new ArrayList<>();
     }
 
+    /**
+     * Deposita un monto en la cuenta.
+     * @param monto El monto a depositar (debe ser positivo).
+     * @throws IllegalArgumentException si el monto es menor o igual a cero.
+     */
     public void depositar(double monto) {
-        if (monto > 0) {
-            saldo += monto;
-            System.out.println("Depósito de " + monto + " realizado con éxito.");
-        } else {
-            System.out.println("El monto del depósito debe ser positivo.");
+        if (monto <= 0) {
+            // --- CAMBIO ---
+            throw new IllegalArgumentException("El monto a depositar debe ser positivo: " + monto);
         }
+        saldo += monto;
+        // Se elimina el System.out.println
     }
+
+    /**
+     * Retira un monto de la cuenta.
+     * @param monto El monto a retirar (debe ser positivo y no exceder el saldo).
+     * @throws IllegalArgumentException si el monto es menor o igual a cero.
+     * @throws IllegalStateException si el saldo es insuficiente.
+     */
     public void retirar(double monto) {
-        if (monto > 0 && monto <= saldo) {
-            saldo -= monto;
-            System.out.println("Retiro de " + monto + " realizado con éxito.");
-        } else {
-            System.out.println("Monto inválido o saldo insuficiente.");
+        if (monto <= 0) {
+            // --- CAMBIO ---
+            throw new IllegalArgumentException("El monto a retirar debe ser positivo: " + monto);
         }
+        if (monto > saldo) {
+            // --- CAMBIO ---
+            throw new IllegalStateException("Saldo insuficiente. Saldo actual: " + saldo + ", Retiro: " + monto);
+        }
+        saldo -= monto;
+        // Se elimina el System.out.println
     }
+
     public double consultarSaldo() {
         return saldo;
     }
+
     public void registrarTransaccion(Transaccion transaccion) {
         transacciones.add(transaccion);
     }
-    public void mostrarMovimientos() {
-        System.out.println("Movimientos de la cuenta " + numeroCuenta + ":");
-        for (Transaccion t : transacciones) {
-            System.out.println("- " + t);
-        }
-    }
+
+    // --- CAMBIO ---
+    // Se elimina 'mostrarMovimientos()'.
+    // El método 'getTransacciones()' permite a 'Main' o 'Gestor' acceder y mostrar los datos.
+
+    // --- Getters ---
     public String getNumeroCuenta() {
         return numeroCuenta;
     }

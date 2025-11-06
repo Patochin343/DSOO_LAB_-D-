@@ -1,60 +1,40 @@
-import java.util.ArrayList;
-import java.util.List;
 
 public class Cliente extends Persona {
 
-    // Atributos 
     private String idCliente;
     private String correo;
     private String estado; // "activo", "inactivo"
 
-    // Esta lista representa la relación con la clase Cuenta
-    private List<Cuenta> cuentas;
+    // --- CAMBIO ---
+    // Se elimina la 'List<Cuenta> cuentas'. 
+    // Gestor usará la lista 'titularidades' como única fuente de verdad.
 
-    // Constructor
     public Cliente(String dni, String nombre, String apellido, String direccion, String telefono,
                    String idCliente, String correo, String estado) {
         
-        // Llama al constructor de la clase base (Persona)
         super(dni, nombre, apellido, direccion, telefono);
         
-        // VALIDACIÓN 
-        // Verificamos que el correo no sea nulo Y que contenga el símbolo "@"
         if (correo == null || !correo.contains("@")) {
-            // Lanza una excepción si la validación falla
             throw new IllegalArgumentException("El correo es inválido. Debe contener un '@'.");
         }
-        // FIN DE LA VALIDACIÓN
 
         this.idCliente = idCliente;
-        this.correo = correo; // Se asigna solo si la validación pasó
+        this.correo = correo;
         this.estado = estado;
-        this.cuentas = new ArrayList<>(); // Inicializa la lista de cuentas
+        // Se elimina la inicialización de la lista de cuentas
     }
 
-    public void registrarCliente() {
-        System.out.println("Cliente " + getNombre() + " registrado con ID: " + this.idCliente);
-    }
+    // --- CAMBIO ---
+    // Se elimina el método 'registrarCliente()'. 
+    // El Gestor se encarga de la lógica y la notificación.
 
-    public void actualizarDatos() {
-        System.out.println("Actualizando datos del cliente " + this.idCliente);
-        // Lógica de actualización...
-    }
+    // --- CAMBIO ---
+    // Se elimina el método 'consultarCuentas()'.
+    // Esta lógica la provee 'Gestor.obtenerCuentasDeCliente()'.
 
-    /**
-     * Implementación del método consultarCuentas.
-     * Devuelve la lista de cuentas asociadas al cliente.
-     *
-     */
-    public List<Cuenta> consultarCuentas() {
-        System.out.println("Consultando cuentas del cliente " + this.idCliente);
-        return this.cuentas;
-    }
-
-    // Método para añadir cuentas a la lista del cliente
-    public void agregarCuenta(Cuenta cuenta) {
-        this.cuentas.add(cuenta);
-    }
+    // --- CAMBIO ---
+    // Se elimina el método 'agregarCuenta(Cuenta cuenta)'.
+    // Titularidad ya no necesita agregarlo aquí.
 
     @Override
     public void mostrarDatos() {
@@ -62,5 +42,29 @@ public class Cliente extends Persona {
         System.out.println("ID Cliente: " + this.idCliente); 
         System.out.println("Correo: " + this.correo); 
         System.out.println("Estado: " + this.estado); 
+    }
+
+    // --- Getters y Setters ---
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        if (correo == null || !correo.contains("@")) {
+            throw new IllegalArgumentException("El correo es inválido. Debe contener un '@'.");
+        }
+        this.correo = correo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

@@ -1,4 +1,3 @@
-import java.util.Date;
 
 public class Empleado extends Persona {
     private String idEmpleado;
@@ -13,14 +12,13 @@ public class Empleado extends Persona {
 
     // Procesar una transacción
     public void procesarTransaccion(Transaccion t, Cuenta cuenta) {
+        // La transacción (depósito o retiro) puede lanzar una excepción
         t.procesar(cuenta);
     }
 
-    // Registrar cliente
-    public void registrarCliente(Cliente c) {
-        System.out.println("Empleado " + getNombre() + " registró al cliente " + c.getNombre());
-        c.registrarCliente();
-    }
+    // --- CAMBIO ---
+    // Se elimina 'registrarCliente(Cliente c)'.
+    // Gestor se encarga de la lógica y notificación.
 
     public String getIdEmpleado() {
         return idEmpleado;

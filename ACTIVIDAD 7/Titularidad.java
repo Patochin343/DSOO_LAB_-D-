@@ -14,8 +14,9 @@ public class Titularidad {
     public void asignarTitular(Cliente cliente, Cuenta cuenta) {
         this.cliente = cliente;
         this.cuenta = cuenta;
-        cliente.agregarCuenta(cuenta);
-        System.out.println("Titularidad asignada correctamente (" + tipoTitular + ")");
+        
+        // --- CAMBIO ---
+        // Se elimina 'cliente.agregarCuenta(cuenta)' y el System.out.println
     }
 
     // Getters

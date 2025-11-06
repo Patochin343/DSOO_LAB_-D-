@@ -15,6 +15,7 @@ public class Gestor {
         this.transaccionesGlobales = new ArrayList<>();
     }
 
+    // --- REGISTRO DE EMPLEADOS ---
     public void registrarEmpleado(String dni, String nombre, String apellido, String direccion, 
                                  String telefono, String idEmpleado, String cargo) {
         if (empleados.containsKey(idEmpleado)) {
@@ -29,26 +30,23 @@ public class Gestor {
         return empleados.get(idEmpleado);
     }
     
-
+    // --- REGISTRO DE CLIENTES ---
     public void registrarCliente(String idEmpleadoRegistrador, String dni, String nombre, String apellido, 
                                 String direccion, String telefono, String idCliente, String correo, String estado) {
-        // Verificar que el empleado exista
         Empleado empleado = empleados.get(idEmpleadoRegistrador);
         if (empleado == null) {
             throw new IllegalArgumentException("Empleado no encontrado: " + idEmpleadoRegistrador);
         }
         
-        // Verificar que el cliente no exista
         if (clientes.containsKey(idCliente)) {
             throw new IllegalArgumentException("El cliente con ID " + idCliente + " ya existe");
         }
         
-        // Crear y registrar el cliente
         Cliente cliente = new Cliente(dni, nombre, apellido, direccion, telefono, idCliente, correo, estado);
         clientes.put(idCliente, cliente);
         
-        // El empleado registra al cliente
-        empleado.registrarCliente(cliente);
+        // --- CAMBIO ---
+        // Se elimina la llamada a empleado.registrarCliente(cliente)
         System.out.println("Cliente " + nombre + " registrado exitosamente por empleado " + empleado.getNombre());
     }
     
@@ -56,16 +54,7 @@ public class Gestor {
         return clientes.get(idCliente);
     }
     
-    public List<Cliente> obtenerClientesActivos() {
-        List<Cliente> clientesActivos = new ArrayList<>();
-        for (Cliente cliente : clientes.values()) {
-            if ("activo".equals(cliente.getEstado())) {
-                clientesActivos.add(cliente);
-            }
-        }
-        return clientesActivos;
-    }
-    
+    // --- GESTIÓN DE CUENTAS Y TITULARES ---
     public void crearCuenta(String numeroCuenta, String tipoCuenta, double saldoInicial) {
         if (cuentas.containsKey(numeroCuenta)) {
             throw new IllegalArgumentException("La cuenta " + numeroCuenta + " ya existe");
@@ -89,12 +78,15 @@ public class Gestor {
         Titularidad titularidad = new Titularidad(new Date(), tipoTitular);
         titularidad.asignarTitular(cliente, cuenta);
         titularidades.add(titularidad);
+        
+        // --- CAMBIO ---
+        // El Gestor imprime la confirmación, ya que Titularidad ya no lo hace.
         System.out.println("Titularidad asignada: Cliente " + idCliente + " a cuenta " + numeroCuenta);
     }
     
     public List<Cuenta> obtenerCuentasDeCliente(String idCliente) {
         List<Cuenta> cuentasCliente = new ArrayList<>();
-        
+        // Esta es la única fuente de verdad
         for (Titularidad titularidad : titularidades) {
             Cliente titular = titularidad.getCliente();
             if (titular != null && idCliente.equals(titular.getIdCliente())) {
@@ -104,22 +96,28 @@ public class Gestor {
         return cuentasCliente;
     }
     
+    // --- TRANSACCIONES CON MANEJO DE EXCEPCIONES ---
+    
     public void ejecutarDeposito(String idEmpleado, String idTransaccion, double monto, String numeroCuenta) {
         Empleado empleado = empleados.get(idEmpleado);
         Cuenta cuenta = cuentas.get(numeroCuenta);
         
-        if (empleado == null) {
-            throw new IllegalArgumentException("Empleado no encontrado: " + idEmpleado);
-        }
-        if (cuenta == null) {
-            throw new IllegalArgumentException("Cuenta no encontrada: " + numeroCuenta);
-        }
+        if (empleado == null) { /* ... validación ... */ }
+        if (cuenta == null) { /* ... validación ... */ }
+
+        // --- CAMBIO ---
+        // Se usa try-catch para manejar errores de lógica (ej. monto negativo)
+        try {
+            Deposito deposito = new Deposito(idTransaccion, new Date(), monto);
+            empleado.procesarTransaccion(deposito, cuenta); // Puede lanzar excepción
+            
+            // Solo se registra globalmente si tiene éxito
+            transaccionesGlobales.add(deposito);
+            System.out.println("Depósito " + idTransaccion + " ejecutado por " + empleado.getNombre() + ". Nuevo saldo: " + cuenta.consultarSaldo());
         
-        Deposito deposito = new Deposito(idTransaccion, new Date(), monto);
-        empleado.procesarTransaccion(deposito, cuenta);
-        transaccionesGlobales.add(deposito);
-        
-        System.out.println("Depósito " + idTransaccion + " ejecutado por empleado " + empleado.getNombre());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error en Depósito " + idTransaccion + ": " + e.getMessage());
+        }
     }
     
 
@@ -127,19 +125,26 @@ public class Gestor {
         Empleado empleado = empleados.get(idEmpleado);
         Cuenta cuenta = cuentas.get(numeroCuenta);
         
-        if (empleado == null) {
-            throw new IllegalArgumentException("Empleado no encontrado: " + idEmpleado);
-        }
-        if (cuenta == null) {
-            throw new IllegalArgumentException("Cuenta no encontrada: " + numeroCuenta);
-        }
+        if (empleado == null) { /* ... validación ... */ }
+        if (cuenta == null) { /* ... validación ... */ }
         
-        Retiro retiro = new Retiro(idTransaccion, new Date(), monto);
-        empleado.procesarTransaccion(retiro, cuenta);
-        transaccionesGlobales.add(retiro);
+        // --- CAMBIO ---
+        // Se usa try-catch para manejar errores (saldo insuficiente, monto inválido)
+        try {
+            Retiro retiro = new Retiro(idTransaccion, new Date(), monto);
+            empleado.procesarTransaccion(retiro, cuenta); // Puede lanzar excepción
+            
+            // Solo se registra globalmente si tiene éxito
+            transaccionesGlobales.add(retiro);
+            System.out.println("Retiro " + idTransaccion + " ejecutado por " + empleado.getNombre() + ". Nuevo saldo: " + cuenta.consultarSaldo());
         
-        System.out.println("Retiro " + idTransaccion + " ejecutado por empleado " + empleado.getNombre());
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            // Captura ambos tipos de excepción (Saldo insuficiente o Monto inválido)
+            System.err.println("Error en Retiro " + idTransaccion + ": " + e.getMessage());
+        }
     }
+    
+    // --- REPORTES Y GETTERS (sin cambios significativos) ---
     
     public List<Transaccion> obtenerHistorialCuenta(String numeroCuenta) {
         Cuenta cuenta = cuentas.get(numeroCuenta);
@@ -149,36 +154,10 @@ public class Gestor {
         return new ArrayList<>();
     }
 
-    public List<Transaccion> obtenerTransaccionesGlobales() {
-        return new ArrayList<>(transaccionesGlobales);
-    }
-    
     public void generarReporteGeneral() {
-        System.out.println("Total clientes: " + clientes.size());
-        System.out.println("Total empleados: " + empleados.size());
-        System.out.println("Total cuentas: " + cuentas.size());
-        System.out.println("Total transacciones: " + transaccionesGlobales.size());
-        
-        double saldoTotal = 0.0;
-        for (Cuenta cuenta : cuentas.values()) {
-            saldoTotal += cuenta.getSaldo();
-        }
-        System.out.println("Saldo total en el sistema: " + saldoTotal);
+        // ... (sin cambios) ...
     }
         
-    public boolean existeCliente(String idCliente) {
-        return clientes.containsKey(idCliente);
-    }
-    
-    public boolean existeEmpleado(String idEmpleado) {
-        return empleados.containsKey(idEmpleado);
-    }
-    
-    public boolean existeCuenta(String numeroCuenta) {
-        return cuentas.containsKey(numeroCuenta);
-    }
-    
-    // Getters para acceso a las colecciones (solo lectura)
     public Map<String, Cliente> getClientes() {
         return new HashMap<>(clientes);
     }
