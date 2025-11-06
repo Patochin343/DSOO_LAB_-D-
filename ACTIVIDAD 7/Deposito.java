@@ -1,7 +1,7 @@
 import java.util.Date;
 public class Deposito extends Transaccion {
     public Deposito(String idTransaccion, Date fecha, double monto) {
-        super(idTransaccion, fecha, monto)
+        super(idTransaccion, fecha, monto);
     }
     public void procesar(Cuenta cuenta){
             cuenta.depositar(getMonto());
