@@ -19,6 +19,7 @@ public class Empleado extends Persona {
     // Registrar cliente
     public void registrarCliente(Cliente c) {
         System.out.println("Empleado " + getNombre() + " registró al cliente " + c.getNombre());
+        c.registrarCliente();
     }
 
     public String getIdEmpleado() {
