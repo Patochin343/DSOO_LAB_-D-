@@ -1,4 +1,4 @@
-package Actividad6.Exceptions;
+package Actividad6.exceptions;
 
 public class MismoClienteException extends Exception {
   public MismoClienteException(String message) {

@@ -1,6 +1,6 @@
 package Actividad6;
 
-import Actividad6.Exceptions.ClientesIgualesException;
+import Actividad6.exceptions.ClientesIgualesException;
 
 import java.util.Scanner;
 
@@ -34,7 +34,8 @@ public class Empleado extends Persona implements SubmenuPersona {
           "\t5) Buscar persona\n" +
           "\t6) Mostrar todas las cuentas\n" +
           "\t7) Mostrar todos los usuarios\n" +
-          "\t8) Salir");
+          "\t8) Gestionar una cuenta\n" +
+          "\t9) Salir");
       opcion=teclado.nextInt();
       switch (opcion) {
         case 1:
@@ -87,11 +88,16 @@ public class Empleado extends Persona implements SubmenuPersona {
           banco.mostrarClientes();
           break;
         case 8:
+          Cliente c=menu.retornarClientePorDni("Ingrese su DNI: ");
+          Cuenta cuenta2=banco.buscarCuentaPorNumeroCuenta(c.getClienteCuentas(),menu.pedirNroDeCuentaDeCliente(c));
+          cuenta2.submenu(banco,menu,empleado,cuenta2);
+          break;
+        case 9:
           break;
         default:
-          System.out.println("El número es inválido (1-8)");
+          System.out.println("El número es inválido (1-9)");
       }
-    }while(opcion!=8);
+    }while(opcion!=9);
   }
 
   public Cliente registrarCliente(Banco banco, String nombre, String apellido, String dni, String direccion, String nroTelefono, String correo, String contrasena){

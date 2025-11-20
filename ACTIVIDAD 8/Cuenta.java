@@ -1,7 +1,7 @@
 package Actividad6;
 
-import Actividad6.Exceptions.MontoInvalidoException;
-import Actividad6.Exceptions.SaldoInsuficienteException;
+import Actividad6.exceptions.MontoInvalidoException;
+import Actividad6.exceptions.SaldoInsuficienteException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +50,6 @@ public class Cuenta implements SubmenuCuenta {
   @Override
   public void submenu(Banco banco, Menu menu, Persona persona,Cuenta cuenta) {
     Scanner teclado=new Scanner(System.in);
-    Cliente cliente=(Cliente) persona;
     int opcion;
     do{
       System.out.println("-------------------");
@@ -64,13 +63,13 @@ public class Cuenta implements SubmenuCuenta {
       opcion=teclado.nextInt();
       switch (opcion) {
         case 1:
-          System.out.println(banco.registrarRetiro(cliente,cuenta,menu.pedirMontoRetiro(cuenta)).mostrarTransaccion());
+          System.out.println(banco.registrarRetiro(persona,cuenta,menu.pedirMontoRetiro(cuenta)).mostrarTransaccion());
           break;
         case 2:
-          System.out.println(banco.registrarDeposito(cliente,cuenta,menu.pedirMontoDeposito(cuenta)).mostrarTransaccion());
+          System.out.println(banco.registrarDeposito(persona,cuenta,menu.pedirMontoDeposito(cuenta)).mostrarTransaccion());
           break;
         case 3:
-          System.out.println(banco.registrarTransferencia(cliente,cuenta, menu.pedirMontoRetiro(cuenta), banco.buscarCuentaPorNumeroCuenta(banco.getClienteCuentas(),menu.pedirNroDeCuentaDiferente(cuenta))).mostrarTransaccion());
+          System.out.println(banco.registrarTransferencia(persona,cuenta, menu.pedirMontoRetiro(cuenta), banco.buscarCuentaPorNumeroCuenta(banco.getClienteCuentas(),menu.pedirNroDeCuentaDiferente(cuenta))).mostrarTransaccion());
           break;
         case 4:
           cuenta.mostrarMovimientos();

@@ -25,6 +25,7 @@ public class Main {
 
     // Añadiendo titulares a una cuenta
     admin1.vincularClienteACuenta(banco,cl1,cl2,cuenta1);
+
     banco.mostrarCuentas();
     Persona persona=menu.login();
     if (persona instanceof SubmenuPersona usuario) {

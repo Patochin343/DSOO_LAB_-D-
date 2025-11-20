@@ -1,4 +1,4 @@
-package Actividad6.Exceptions;
+package Actividad6.exceptions;
 
 public class ClientesIgualesException extends Exception {
   public ClientesIgualesException(String message) {

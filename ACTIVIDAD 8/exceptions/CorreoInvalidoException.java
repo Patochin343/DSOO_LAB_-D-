@@ -1,4 +1,4 @@
-package Actividad6.Exceptions;
+package Actividad6.exceptions;
 
 public class CorreoInvalidoException extends Exception {
   public CorreoInvalidoException(String message) {
