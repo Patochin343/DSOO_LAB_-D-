@@ -1,4 +1,4 @@
-package Actividad6;
+package Actividad6.Exceptions;
 
 public class MontoInvalidoException extends Exception {
   public MontoInvalidoException(String message) {

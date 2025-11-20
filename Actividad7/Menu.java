@@ -1,5 +1,7 @@
 package Actividad6;
 
+import Actividad6.Exceptions.*;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -168,7 +170,7 @@ public class Menu {
       try{
         banco.ingresarCorreo(correo);
         correoValido=true;
-      }catch (CorreoInvalidoException|CorreoYaRegistradoException e){
+      }catch (CorreoInvalidoException | CorreoYaRegistradoException e){
         System.out.println(e.getMessage());
       }
     }while(!correoValido);

@@ -1,5 +1,7 @@
 package Actividad6;
 
+import Actividad6.Exceptions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,7 +142,7 @@ public class Banco {
     }
   }
 
-  public void validarApellido(String apellido) throws ApellidoInvalidoException{
+  public void validarApellido(String apellido) throws ApellidoInvalidoException {
     if(!apellido.matches("^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$")){
       throw new ApellidoInvalidoException("Apellido inválido");
     }
@@ -197,7 +199,7 @@ public class Banco {
     }
   }
 
-  public void validarCorreo(String correo) throws CorreoInvalidoException,CorreoNoEncontradoException{
+  public void validarCorreo(String correo) throws CorreoInvalidoException, CorreoNoEncontradoException {
     if(!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$")){
       throw new CorreoInvalidoException("Correo inválido");
     }
@@ -215,7 +217,7 @@ public class Banco {
     }
   }
 
-  public void validarContrasena(String contrasena)throws ContrasenaInvalidaException{
+  public void validarContrasena(String contrasena)throws ContrasenaInvalidaException {
     if(contrasena.length()<6){
       throw new ContrasenaInvalidaException("La constraseña debe tener al menos 6 dígitos");
     }
@@ -263,7 +265,7 @@ public class Banco {
     }
   }
 
-  public void validarDiferenciaDeClientes(Cliente cliente1,Cliente cliente2) throws ClientesIgualesException{
+  public void validarDiferenciaDeClientes(Cliente cliente1,Cliente cliente2) throws ClientesIgualesException {
     if(cliente1.getDni().equals(cliente2.getDni())){
       throw new ClientesIgualesException("No se puede añadir titularidad a usted mismo");
     }

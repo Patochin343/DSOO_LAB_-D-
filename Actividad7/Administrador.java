@@ -1,5 +1,7 @@
 package Actividad6;
 
+import Actividad6.Exceptions.ClientesIgualesException;
+
 import java.util.Scanner;
 
 public class Administrador extends Persona implements SubmenuPersona {

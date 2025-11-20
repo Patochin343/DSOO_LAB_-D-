@@ -1,4 +1,4 @@
-package Actividad6;
+package Actividad6.Exceptions;
 
 public class NroDeCuentaInvalidoException extends Exception {
   public NroDeCuentaInvalidoException(String message) {

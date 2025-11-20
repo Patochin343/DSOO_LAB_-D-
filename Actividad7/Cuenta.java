@@ -1,5 +1,8 @@
 package Actividad6;
 
+import Actividad6.Exceptions.MontoInvalidoException;
+import Actividad6.Exceptions.SaldoInsuficienteException;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -83,7 +86,7 @@ public class Cuenta implements SubmenuCuenta {
     }while(opcion!=6);
   }
 
-  public void validarMontoRetiro(double monto)throws MontoInvalidoException,SaldoInsuficienteException{
+  public void validarMontoRetiro(double monto)throws MontoInvalidoException, SaldoInsuficienteException {
     if(monto<=0){
       throw new MontoInvalidoException("El monto debe ser mayor que 0");
     }
