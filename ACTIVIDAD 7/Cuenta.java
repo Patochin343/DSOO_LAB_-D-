@@ -17,11 +17,7 @@ public class Cuenta {
         this.transacciones = new ArrayList<>();
     }
 
-    /**
-     * Deposita un monto en la cuenta.
-     * @param monto El monto a depositar (debe ser positivo).
-     * @throws IllegalArgumentException si el monto es menor o igual a cero.
-     */
+
     public void depositar(double monto) {
         if (monto <= 0) {
             // --- CAMBIO ---
