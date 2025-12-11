@@ -21,11 +21,13 @@ public class AdminDashboard extends JFrame {
     this.empleadoDAO = new EmpleadoDAO();
 
     setTitle("Panel Administrador - " + admin.getNombre());
-    setSize(900, 600);
+    setSize(1000, 700);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
+    Estilos.aplicarEstiloVentana(this);
 
     JTabbedPane tabs = new JTabbedPane();
+    tabs.setFont(Estilos.FUENTE_SUBTITULO);
     tabs.addTab("Gestionar Empleados", crearPanelGestionEmpleados());
     tabs.addTab("Gestionar Clientes", crearPanelGestionClientes());
 
@@ -33,8 +35,14 @@ public class AdminDashboard extends JFrame {
   }
 
   private JPanel crearPanelGestionEmpleados() {
-    JPanel panel = new JPanel(new BorderLayout(10, 10));
+    JPanel panel = new JPanel(new BorderLayout(20, 20));
+    Estilos.estilizarPanel(panel);
+    panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+    // Titulo
+    panel.add(Estilos.crearTitulo("Gestión de Empleados"), BorderLayout.NORTH);
+
+    // Tabla
     String[] vars = { "ID", "Nombre", "Apellido", "DNI", "Correo" };
     DefaultTableModel tableModel = new DefaultTableModel(vars, 0) {
       @Override
@@ -43,34 +51,47 @@ public class AdminDashboard extends JFrame {
       }
     };
     JTable table = new JTable(tableModel);
+    table.setFont(Estilos.FUENTE_TEXTO);
+    table.setRowHeight(25);
+    table.getTableHeader().setFont(Estilos.FUENTE_BOTON);
+    table.getTableHeader().setBackground(Estilos.COLOR_SECUNDARIO);
+    table.getTableHeader().setForeground(Color.WHITE);
     panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-    JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
-    JTextField txtNombre = new JTextField();
-    JTextField txtApellido = new JTextField();
-    JTextField txtDni = new JTextField();
-    JTextField txtCorreo = new JTextField();
-    JPasswordField txtContra = new JPasswordField();
+    // Formulario
+    JPanel formPanel = new JPanel(new GridLayout(3, 4, 15, 15)); // Grid mas ancho
+    Estilos.estilizarPanel(formPanel);
+
+    JTextField txtNombre = Estilos.crearCampoTexto();
+    JTextField txtApellido = Estilos.crearCampoTexto();
+    JTextField txtDni = Estilos.crearCampoTexto();
+    JTextField txtCorreo = Estilos.crearCampoTexto();
+    JPasswordField txtContra = Estilos.crearCampoContrasena();
     JTextField txtId = new JTextField();
     txtId.setEditable(false);
     txtId.setVisible(false);
 
-    formPanel.add(new JLabel("Nombre:"));
+    formPanel.add(Estilos.crearLabel("Nombre:"));
     formPanel.add(txtNombre);
-    formPanel.add(new JLabel("Apellido:"));
+    formPanel.add(Estilos.crearLabel("Apellido:"));
     formPanel.add(txtApellido);
-    formPanel.add(new JLabel("DNI:"));
+    formPanel.add(Estilos.crearLabel("DNI:"));
     formPanel.add(txtDni);
-    formPanel.add(new JLabel("Correo:"));
+    formPanel.add(Estilos.crearLabel("Correo:"));
     formPanel.add(txtCorreo);
-    formPanel.add(new JLabel("Nueva Contraseña:"));
+    formPanel.add(Estilos.crearLabel("Nueva Contraseña:"));
     formPanel.add(txtContra);
 
-    JPanel btnPanel = new JPanel(new FlowLayout());
-    JButton btnCrear = new JButton("Crear");
-    JButton btnActualizar = new JButton("Actualizar");
-    JButton btnEliminar = new JButton("Eliminar");
-    JButton btnLimpiar = new JButton("Limpiar");
+    // Botones
+    JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+    Estilos.estilizarPanel(btnPanel);
+
+    JButton btnCrear = Estilos.crearBotonPrimario("Crear");
+    JButton btnActualizar = Estilos.crearBotonPrimario("Actualizar");
+    JButton btnEliminar = Estilos.crearBotonPrimario("Eliminar");
+    btnEliminar.setBackground(new Color(211, 47, 47)); // Rojo para eliminar
+    JButton btnLimpiar = Estilos.crearBotonPrimario("Limpiar");
+    btnLimpiar.setBackground(Color.GRAY);
 
     btnPanel.add(btnCrear);
     btnPanel.add(btnActualizar);
@@ -78,10 +99,13 @@ public class AdminDashboard extends JFrame {
     btnPanel.add(btnLimpiar);
 
     JPanel surPanel = new JPanel(new BorderLayout());
+    Estilos.estilizarPanel(surPanel);
     surPanel.add(formPanel, BorderLayout.CENTER);
     surPanel.add(btnPanel, BorderLayout.SOUTH);
+
     panel.add(surPanel, BorderLayout.SOUTH);
 
+    // Lógica (sin cambios funcionales importantes, solo replicando)
     Runnable cargarDatos = () -> {
       tableModel.setRowCount(0);
       List<Empleado> lista = empleadoDAO.listar();
@@ -133,11 +157,8 @@ public class AdminDashboard extends JFrame {
         return;
       int id = Integer.parseInt(idStr);
       String pass = new String(txtContra.getPassword());
-      // Nota: Si la contraseña está vacía, idealmente no se debería cambiar, pero
-      // aqui simplificamos obligando o reusando
       if (pass.isEmpty())
-        pass = "banco123"; // default si vacia en update simple
-
+        pass = "banco123";
       Empleado emp = new Empleado(id, txtNombre.getText(), txtApellido.getText(), txtDni.getText(), txtCorreo.getText(),
           pass);
       if (empleadoDAO.actualizar(emp)) {
@@ -168,7 +189,11 @@ public class AdminDashboard extends JFrame {
   }
 
   private JPanel crearPanelGestionClientes() {
-    JPanel panel = new JPanel(new BorderLayout(10, 10));
+    JPanel panel = new JPanel(new BorderLayout(20, 20));
+    Estilos.estilizarPanel(panel);
+    panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+    panel.add(Estilos.crearTitulo("Gestión de Clientes"), BorderLayout.NORTH);
 
     String[] vars = { "ID", "Nombre", "Apellido", "DNI", "Correo" };
     DefaultTableModel tableModel = new DefaultTableModel(vars, 0) {
@@ -178,34 +203,45 @@ public class AdminDashboard extends JFrame {
       }
     };
     JTable table = new JTable(tableModel);
+    table.setFont(Estilos.FUENTE_TEXTO);
+    table.setRowHeight(25);
+    table.getTableHeader().setFont(Estilos.FUENTE_BOTON);
+    table.getTableHeader().setBackground(Estilos.COLOR_SECUNDARIO);
+    table.getTableHeader().setForeground(Color.WHITE);
     panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-    JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
-    JTextField txtNombre = new JTextField();
-    JTextField txtApellido = new JTextField();
-    JTextField txtDni = new JTextField();
-    JTextField txtCorreo = new JTextField();
-    JPasswordField txtContra = new JPasswordField();
+    JPanel formPanel = new JPanel(new GridLayout(3, 4, 15, 15));
+    Estilos.estilizarPanel(formPanel);
+
+    JTextField txtNombre = Estilos.crearCampoTexto();
+    JTextField txtApellido = Estilos.crearCampoTexto();
+    JTextField txtDni = Estilos.crearCampoTexto();
+    JTextField txtCorreo = Estilos.crearCampoTexto();
+    JPasswordField txtContra = Estilos.crearCampoContrasena();
     JTextField txtId = new JTextField();
     txtId.setEditable(false);
     txtId.setVisible(false);
 
-    formPanel.add(new JLabel("Nombre:"));
+    formPanel.add(Estilos.crearLabel("Nombre:"));
     formPanel.add(txtNombre);
-    formPanel.add(new JLabel("Apellido:"));
+    formPanel.add(Estilos.crearLabel("Apellido:"));
     formPanel.add(txtApellido);
-    formPanel.add(new JLabel("DNI:"));
+    formPanel.add(Estilos.crearLabel("DNI:"));
     formPanel.add(txtDni);
-    formPanel.add(new JLabel("Correo:"));
+    formPanel.add(Estilos.crearLabel("Correo:"));
     formPanel.add(txtCorreo);
-    formPanel.add(new JLabel("Nueva Contraseña:"));
+    formPanel.add(Estilos.crearLabel("Nueva Contraseña:"));
     formPanel.add(txtContra);
 
-    JPanel btnPanel = new JPanel(new FlowLayout());
-    JButton btnCrear = new JButton("Crear");
-    JButton btnActualizar = new JButton("Actualizar");
-    JButton btnEliminar = new JButton("Eliminar");
-    JButton btnLimpiar = new JButton("Limpiar");
+    JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+    Estilos.estilizarPanel(btnPanel);
+
+    JButton btnCrear = Estilos.crearBotonPrimario("Crear");
+    JButton btnActualizar = Estilos.crearBotonPrimario("Actualizar");
+    JButton btnEliminar = Estilos.crearBotonPrimario("Eliminar");
+    btnEliminar.setBackground(new Color(211, 47, 47));
+    JButton btnLimpiar = Estilos.crearBotonPrimario("Limpiar");
+    btnLimpiar.setBackground(Color.GRAY);
 
     btnPanel.add(btnCrear);
     btnPanel.add(btnActualizar);
@@ -213,6 +249,7 @@ public class AdminDashboard extends JFrame {
     btnPanel.add(btnLimpiar);
 
     JPanel surPanel = new JPanel(new BorderLayout());
+    Estilos.estilizarPanel(surPanel);
     surPanel.add(formPanel, BorderLayout.CENTER);
     surPanel.add(btnPanel, BorderLayout.SOUTH);
     panel.add(surPanel, BorderLayout.SOUTH);
@@ -268,10 +305,8 @@ public class AdminDashboard extends JFrame {
         return;
       int id = Integer.parseInt(idStr);
       String pass = new String(txtContra.getPassword());
-      // Default pass logic
       if (pass.isEmpty())
         pass = "cliente123";
-
       Cliente c = new Cliente(id, txtNombre.getText(), txtApellido.getText(), txtDni.getText(), txtCorreo.getText(),
           pass);
       if (clienteDAO.actualizar(c)) {

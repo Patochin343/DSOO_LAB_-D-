@@ -23,16 +23,22 @@ public class ClienteDashboard extends JFrame {
     this.transaccionDAO = new TransaccionDAO();
 
     setTitle("Banca Personal - " + cliente.getNombre());
-    setSize(800, 500);
+    setSize(900, 600);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
+    Estilos.aplicarEstiloVentana(this);
 
-    setLayout(new BorderLayout());
+    setLayout(new BorderLayout(20, 20));
+    ((JPanel) getContentPane()).setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-    JLabel encabezado = new JLabel("Mis Cuentas", SwingConstants.CENTER);
-    encabezado.setFont(new Font("Arial", Font.BOLD, 18));
-    add(encabezado, BorderLayout.NORTH);
+    // Header
+    JPanel headerPanel = new JPanel(new BorderLayout());
+    Estilos.estilizarPanel(headerPanel);
+    headerPanel.add(Estilos.crearTitulo("Mis Cuentas"), BorderLayout.WEST);
+    headerPanel.add(Estilos.crearLabel("Bienvenido, " + cliente.getNombre()), BorderLayout.EAST);
+    add(headerPanel, BorderLayout.NORTH);
 
+    // Tabla
     String[] columnas = { "ID", "No. Cuenta", "Tipo", "Saldo" };
     modeloTabla = new DefaultTableModel(columnas, 0) {
       @Override
@@ -41,16 +47,28 @@ public class ClienteDashboard extends JFrame {
       }
     };
     tablaCuentas = new JTable(modeloTabla);
-    add(new JScrollPane(tablaCuentas), BorderLayout.CENTER);
+    tablaCuentas.setFont(Estilos.FUENTE_TEXTO);
+    tablaCuentas.setRowHeight(30);
+    tablaCuentas.getTableHeader().setFont(Estilos.FUENTE_BOTON);
+    tablaCuentas.getTableHeader().setBackground(Estilos.COLOR_SECUNDARIO);
+    tablaCuentas.getTableHeader().setForeground(Color.WHITE);
+
+    JScrollPane scrollPane = new JScrollPane(tablaCuentas);
+    scrollPane.getViewport().setBackground(Color.WHITE);
+    add(scrollPane, BorderLayout.CENTER);
 
     loadCuentas();
 
-    JPanel panelBotones = new JPanel();
-    JButton botonActualizar = new JButton("Actualizar");
-    JButton botonDepositar = new JButton("Depositar");
-    JButton botonRetirar = new JButton("Retirar");
-    JButton botonTransferir = new JButton("Transferir");
-    JButton botonHistorial = new JButton("Ver Movimientos");
+    // Botones
+    JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+    Estilos.estilizarPanel(panelBotones);
+
+    JButton botonActualizar = Estilos.crearBotonPrimario("Actualizar");
+    JButton botonDepositar = Estilos.crearBotonPrimario("Depositar");
+    JButton botonRetirar = Estilos.crearBotonPrimario("Retirar");
+    JButton botonTransferir = Estilos.crearBotonPrimario("Transferir");
+    JButton botonHistorial = Estilos.crearBotonPrimario("Ver Movimientos");
+    botonHistorial.setBackground(Estilos.COLOR_SECUNDARIO);
 
     panelBotones.add(botonActualizar);
     panelBotones.add(botonDepositar);
@@ -155,12 +173,20 @@ public class ClienteDashboard extends JFrame {
     String numCuenta = (String) modeloTabla.getValueAt(fila, 1);
 
     JDialog dialogo = new JDialog(this, "Historial - " + numCuenta, true);
-    dialogo.setSize(500, 300);
+    dialogo.setSize(600, 400);
     dialogo.setLocationRelativeTo(this);
+    Estilos.aplicarEstiloVentana((JFrame) SwingUtilities.getWindowAncestor(this)); // Hacky, mejor no tocar el dialog
+                                                                                   // mucho
+    dialogo.getContentPane().setBackground(Estilos.COLOR_FONDO);
 
     String[] columnas = { "Fecha", "Tipo", "Monto" };
     DefaultTableModel modeloHist = new DefaultTableModel(columnas, 0);
     JTable tablaHist = new JTable(modeloHist);
+    tablaHist.setFont(Estilos.FUENTE_TEXTO);
+    tablaHist.setRowHeight(25);
+    tablaHist.getTableHeader().setFont(Estilos.FUENTE_BOTON);
+    tablaHist.getTableHeader().setBackground(Estilos.COLOR_SECUNDARIO);
+    tablaHist.getTableHeader().setForeground(Color.WHITE);
 
     List<Transaccion> transacciones = transaccionDAO.listar(idCuenta);
     for (Transaccion t : transacciones) {
