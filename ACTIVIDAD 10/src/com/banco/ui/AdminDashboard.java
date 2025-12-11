@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import com.banco.ui.Estilos;
 
 public class AdminDashboard extends JFrame {
   private Administrador admin;
@@ -138,8 +139,11 @@ public class AdminDashboard extends JFrame {
     });
 
     btnCrear.addActionListener(e -> {
-      if (txtDni.getText().isEmpty())
+      if (txtNombre.getText().trim().isEmpty() || txtApellido.getText().trim().isEmpty() ||
+          txtDni.getText().trim().isEmpty() || txtCorreo.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Todos los campos (Nombre, Apellido, DNI, Correo) son obligatorios.");
         return;
+      }
       Empleado emp = new Empleado(txtNombre.getText(), txtApellido.getText(), txtDni.getText(), txtCorreo.getText(),
           new String(txtContra.getPassword()));
       if (empleadoDAO.registrar(emp)) {
@@ -155,6 +159,11 @@ public class AdminDashboard extends JFrame {
       String idStr = txtId.getText();
       if (idStr.isEmpty())
         return;
+      if (txtNombre.getText().trim().isEmpty() || txtApellido.getText().trim().isEmpty() ||
+          txtDni.getText().trim().isEmpty() || txtCorreo.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+        return;
+      }
       int id = Integer.parseInt(idStr);
       String pass = new String(txtContra.getPassword());
       if (pass.isEmpty())
@@ -286,8 +295,11 @@ public class AdminDashboard extends JFrame {
     });
 
     btnCrear.addActionListener(e -> {
-      if (txtDni.getText().isEmpty())
+      if (txtNombre.getText().trim().isEmpty() || txtApellido.getText().trim().isEmpty() ||
+          txtDni.getText().trim().isEmpty() || txtCorreo.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Todos los campos (Nombre, Apellido, DNI, Correo) son obligatorios.");
         return;
+      }
       Cliente c = new Cliente(txtNombre.getText(), txtApellido.getText(), txtDni.getText(), txtCorreo.getText(),
           new String(txtContra.getPassword()));
       if (clienteDAO.registrar(c)) {
@@ -303,6 +315,11 @@ public class AdminDashboard extends JFrame {
       String idStr = txtId.getText();
       if (idStr.isEmpty())
         return;
+      if (txtNombre.getText().trim().isEmpty() || txtApellido.getText().trim().isEmpty() ||
+          txtDni.getText().trim().isEmpty() || txtCorreo.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+        return;
+      }
       int id = Integer.parseInt(idStr);
       String pass = new String(txtContra.getPassword());
       if (pass.isEmpty())

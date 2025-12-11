@@ -5,7 +5,6 @@
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/dao/PersonasDAO.java"
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/dao/TransaccionDAO.java"
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/main/Main.java"
-"C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/main/ResetDB.java"
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/model/Administrador.java"
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/model/Cliente.java"
 "C:/Users/Usuario/Documents/GitHub/DSOO_LAB_-D-/ACTIVIDAD 10/src/com/banco/model/ClienteCuenta.java"
