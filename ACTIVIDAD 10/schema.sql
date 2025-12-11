@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS personas (
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     dni VARCHAR(20) UNIQUE NOT NULL,
-    email VARCHAR(100),
-    password VARCHAR(100) NOT NULL,
+    correo VARCHAR(100),
+    contrasena VARCHAR(100) NOT NULL,
     rol VARCHAR(20) NOT NULL -- 'ADMIN', 'EMPLEADO', 'CLIENTE'
 );
 
@@ -36,6 +36,6 @@ CREATE TABLE IF NOT EXISTS transacciones (
 );
 
 -- Insertar un admin por defecto
-INSERT INTO personas (nombre, apellido, dni, email, password, rol) 
+INSERT INTO personas (nombre, apellido, dni, correo, contrasena, rol) 
 VALUES ('Super', 'Admin', '00000000', 'admin@banco.com', 'admin123', 'ADMIN') 
 ON DUPLICATE KEY UPDATE id=id;
