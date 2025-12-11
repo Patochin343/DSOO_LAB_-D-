@@ -1,0 +1,174 @@
+package com.banco.ui;
+
+import com.banco.dao.CuentaDAO;
+import com.banco.dao.TransaccionDAO;
+import com.banco.model.Cliente;
+import com.banco.model.Cuenta;
+import com.banco.model.Transaccion;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class ClienteDashboard extends JFrame {
+  private Cliente cliente;
+  private CuentaDAO cuentaDAO;
+  private TransaccionDAO transaccionDAO;
+  private JTable tablaCuentas;
+  private DefaultTableModel modeloTabla;
+
+  public ClienteDashboard(Cliente cliente) {
+    this.cliente = cliente;
+    this.cuentaDAO = new CuentaDAO();
+    this.transaccionDAO = new TransaccionDAO();
+
+    setTitle("Banca Personal - " + cliente.getNombre());
+    setSize(800, 500);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLocationRelativeTo(null);
+
+    setLayout(new BorderLayout());
+
+    JLabel encabezado = new JLabel("Mis Cuentas", SwingConstants.CENTER);
+    encabezado.setFont(new Font("Arial", Font.BOLD, 18));
+    add(encabezado, BorderLayout.NORTH);
+
+    String[] columnas = { "ID", "No. Cuenta", "Tipo", "Saldo" };
+    modeloTabla = new DefaultTableModel(columnas, 0) {
+      @Override
+      public boolean isCellEditable(int fila, int columna) {
+        return false;
+      }
+    };
+    tablaCuentas = new JTable(modeloTabla);
+    add(new JScrollPane(tablaCuentas), BorderLayout.CENTER);
+
+    loadCuentas();
+
+    JPanel panelBotones = new JPanel();
+    JButton botonActualizar = new JButton("Actualizar");
+    JButton botonDepositar = new JButton("Depositar");
+    JButton botonRetirar = new JButton("Retirar");
+    JButton botonTransferir = new JButton("Transferir");
+    JButton botonHistorial = new JButton("Ver Movimientos");
+
+    panelBotones.add(botonActualizar);
+    panelBotones.add(botonDepositar);
+    panelBotones.add(botonRetirar);
+    panelBotones.add(botonTransferir);
+    panelBotones.add(botonHistorial);
+    add(panelBotones, BorderLayout.SOUTH);
+
+    botonActualizar.addActionListener(e -> loadCuentas());
+
+    botonDepositar.addActionListener(e -> realizarTransaccion("DEPOSITO"));
+    botonRetirar.addActionListener(e -> realizarTransaccion("RETIRO"));
+    botonTransferir.addActionListener(e -> realizarTransferenciaUI());
+    botonHistorial.addActionListener(e -> verHistorial());
+  }
+
+  private void loadCuentas() {
+    modeloTabla.setRowCount(0);
+    List<Cuenta> cuentas = cuentaDAO.listarPorCliente(cliente.getId());
+    for (Cuenta c : cuentas) {
+      modeloTabla.addRow(new Object[] { c.getId(), c.getNumeroCuenta(), c.getTipoCuenta(), c.getSaldo() });
+    }
+  }
+
+  private void realizarTransaccion(String tipo) {
+    int fila = tablaCuentas.getSelectedRow();
+    if (fila == -1) {
+      JOptionPane.showMessageDialog(this, "Seleccione una cuenta");
+      return;
+    }
+
+    int idCuenta = (int) modeloTabla.getValueAt(fila, 0);
+
+    String entrada = JOptionPane.showInputDialog(this, "Ingrese monto para " + tipo + ":");
+    if (entrada != null && !entrada.isEmpty()) {
+      try {
+        double monto = Double.parseDouble(entrada);
+        if (monto <= 0) {
+          JOptionPane.showMessageDialog(this, "Monto debe ser positivo");
+          return;
+        }
+
+        if (transaccionDAO.realizarTransaccion(idCuenta, tipo, monto)) {
+          JOptionPane.showMessageDialog(this, "Transacción exitosa");
+          loadCuentas();
+        } else {
+          JOptionPane.showMessageDialog(this, "Error en transacción (verifique saldo)");
+        }
+      } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Monto inválido");
+      }
+    }
+  }
+
+  private void realizarTransferenciaUI() {
+    int fila = tablaCuentas.getSelectedRow();
+    if (fila == -1) {
+      JOptionPane.showMessageDialog(this, "Seleccione una cuenta origen");
+      return;
+    }
+    int idCuenta = (int) modeloTabla.getValueAt(fila, 0);
+    String numCuentaOrigen = (String) modeloTabla.getValueAt(fila, 1);
+
+    String cuentaDestino = JOptionPane.showInputDialog(this, "Ingrese el número de cuenta destino:");
+    if (cuentaDestino == null || cuentaDestino.isEmpty())
+      return;
+
+    if (cuentaDestino.equals(numCuentaOrigen)) {
+      JOptionPane.showMessageDialog(this, "No puede transferir a la misma cuenta de origen.");
+      return;
+    }
+
+    String montoEntrada = JOptionPane.showInputDialog(this, "Ingrese monto a transferir:");
+    if (montoEntrada != null && !montoEntrada.isEmpty()) {
+      try {
+        double monto = Double.parseDouble(montoEntrada);
+        if (monto <= 0) {
+          JOptionPane.showMessageDialog(this, "Monto debe ser positivo");
+          return;
+        }
+
+        if (transaccionDAO.realizarTransferencia(idCuenta, cuentaDestino, monto)) {
+          JOptionPane.showMessageDialog(this, "Transferencia realizada con éxito!");
+          loadCuentas();
+        } else {
+          JOptionPane.showMessageDialog(this, "Error: Verifique saldo o cuenta destino inexistente.");
+        }
+      } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Monto inválido");
+      }
+    }
+  }
+
+  private void verHistorial() {
+    int fila = tablaCuentas.getSelectedRow();
+    if (fila == -1) {
+      JOptionPane.showMessageDialog(this, "Seleccione una cuenta");
+      return;
+    }
+
+    int idCuenta = (int) modeloTabla.getValueAt(fila, 0);
+    String numCuenta = (String) modeloTabla.getValueAt(fila, 1);
+
+    JDialog dialogo = new JDialog(this, "Historial - " + numCuenta, true);
+    dialogo.setSize(500, 300);
+    dialogo.setLocationRelativeTo(this);
+
+    String[] columnas = { "Fecha", "Tipo", "Monto" };
+    DefaultTableModel modeloHist = new DefaultTableModel(columnas, 0);
+    JTable tablaHist = new JTable(modeloHist);
+
+    List<Transaccion> transacciones = transaccionDAO.listar(idCuenta);
+    for (Transaccion t : transacciones) {
+      String montoStr = (t.getMonto() > 0 ? "+" : "") + t.getMonto();
+      modeloHist.addRow(new Object[] { t.getFecha(), t.getTipoTransaccion(), montoStr });
+    }
+
+    dialogo.add(new JScrollPane(tablaHist));
+    dialogo.setVisible(true);
+  }
+}
