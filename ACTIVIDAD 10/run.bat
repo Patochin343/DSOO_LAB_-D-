@@ -1,6 +1,6 @@
 @echo off
 if not exist bin mkdir bin
-dir /s /B src\*.java > sources.txt
+powershell -Command "Get-ChildItem -Path src -Recurse -Filter *.java | ForEach-Object { '\"' + $_.FullName.Replace('\', '/') + '\"' } | Out-File -Encoding ASCII sources.txt"
 javac -d bin -cp "lib/*;src" @sources.txt
 if %errorlevel% neq 0 (
     echo Compilation failed
